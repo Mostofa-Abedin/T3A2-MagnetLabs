@@ -2,10 +2,15 @@ import React, { useState } from "react";
 import "./loginform.css";
 import { useNavigate } from "react-router-dom"; 
 
+
+const LoginForm = ({ onSubmit, isAdmin, setIsAdmin, setUserName }) => {
+  const [isLogin, setIsLogin] = useState(true); // Whether the user is in login or register mode
+
 const LoginForm = ({ onSubmit, isAdmin, setIsAdmin }) => {
   const navigate = useNavigate(); // Use navigate inside component
 
   const [isLogin, setIsLogin] = useState(true); 
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -48,6 +53,13 @@ const LoginForm = ({ onSubmit, isAdmin, setIsAdmin }) => {
 
     setLoading(true); // Set loading before making the request
 
+
+      // If submission is successful, show a success message
+      if (response.success) {
+        setSuccessMessage("Form submitted successfully!");
+        setErrorMessage(null); // Clear error message if any
+        setUserName(formData.name); // Set username after successful login
+
     try {
       const response = await fetch(endpoint, {
         method: "POST",
@@ -75,6 +87,7 @@ const LoginForm = ({ onSubmit, isAdmin, setIsAdmin }) => {
             navigate("/dashboard");  // Uncomment when dashboard page exists
           }
         }, 2000); // Delay for UI feedback
+
       } else {
         setErrorMessage("Something went wrong. Please try again.");
         setSuccessMessage(null);
